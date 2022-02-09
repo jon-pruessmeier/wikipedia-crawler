@@ -20,7 +20,6 @@ wikipedia_homepage = 'https://de.wikipedia.org/wiki/Wikipedia:Hauptseite'
 article_of_the_day_id = 'artikel'
 
 
-
 # Create the driver
 driver = webdriver.Firefox()
 
@@ -37,6 +36,12 @@ hauptseite_mehr = driver.find_element(By.CLASS_NAME, 'hauptseite-mehr')
 # Link to the article of the day
 link = driver.find_element(By.LINK_TEXT, hauptseite_mehr.text)
 
+# Method to iterate through a bunch of Wikipedia-pages
+#
+# @param link_to_page: an anchor-element which is the start-point of the iteration
+# @param n: quantity of iterations
+#
+# @return: list of objects containing title, first part of the text, url of the main-image and the link to the page
 
 def fill_result(link_to_page, n):
     current_link = link_to_page
@@ -45,27 +50,25 @@ def fill_result(link_to_page, n):
         #Iterating through the pages:
         for i in range(n):
 
-            #Printing the current page-link and saving it in a variable:
+            # Accessing the current link as a plain string
             href = current_link.get_attribute("href")
-            print('-----PAGE LINK:--------')
-            print(href)
 
             # Accessing the page:
             current_link.click()
 
-            # Accessing and printing the title of the article
+            # Accessing and the title of the article
             title = driver.find_element(By.ID, title_id)
             title_text = title.text
-            #print('----------------')
-            #print('TITLE:')
-            #print(title_text)
 
-            # Accessing and printing the p-element of the article
+            # Accessing the first p-element of the article
             first_p_elem = driver.find_element(By.XPATH, first_p_path)
             p_text = first_p_elem.text
-            #print('----------------')
-            #print('TEXT:')
-            #print(p_text)
+
+            # Accessing the path of the main image:
+            main_img = driver.find_element(By.CLASS_NAME, 'thumbimage')
+            main_img_url = main_img.get_attribute('src')
+
+
 
             # Accesing a random link to a new wikipedia page and assign it to the current_link variable
             page_link = driver.find_element(By.XPATH, first_a_path)
@@ -73,7 +76,7 @@ def fill_result(link_to_page, n):
 
 
             # Filling the result:
-            result.append({'title':title_text, 'p-text':p_text, 'link': href})
+            result.append({'title':title_text, 'p-text':p_text, 'link': href, 'img': main_img_url})
     except:
         return result
 
@@ -81,14 +84,14 @@ def fill_result(link_to_page, n):
 
         
 result = fill_result(link, page_quantity)
-print(result)
 
 
 # Close the driver
 driver.quit()
 
+# Converting the result to JSON-format
+result_json = json.dumps(result)
 
-# data_json = json.dumps(data)
-# print(data_json)
-
-# sys.stdout.flush()
+# Printing the JSON
+print(result_json)
+sys.stdout.flush()
