@@ -1,4 +1,6 @@
+from email.mime import image
 import json
+from logging import exception
 import os
 import sys
 from selenium import webdriver
@@ -65,8 +67,14 @@ def fill_result(link_to_page, n):
             p_text = first_p_elem.text
 
             # Accessing the path of the main image:
-            main_img = driver.find_element(By.CLASS_NAME, 'thumbimage')
-            main_img_url = main_img.get_attribute('src')
+            images = driver.find_elements(By.CLASS_NAME, 'thumbimage')
+
+            main_img = ""
+            main_img_url = ""
+            
+            if len(images) != 0:
+                main_img = driver.find_element(By.CLASS_NAME, 'thumbimage')
+                main_img_url = main_img.get_attribute('src')
 
 
 
@@ -77,7 +85,8 @@ def fill_result(link_to_page, n):
 
             # Filling the result:
             result.append({'title':title_text, 'p-text':p_text, 'link': href, 'img': main_img_url})
-    except:
+    except Exception as e:
+        print(e)
         return result
 
     return result
