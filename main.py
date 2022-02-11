@@ -85,7 +85,6 @@ def fill_result(link_to_page, n):
             # Filling the result:
             result.append({'title':title_text, 'p-text':p_text, 'link': href, 'img': main_img_url})
     except Exception as e:
-        print(e)
         return result
 
     return result
