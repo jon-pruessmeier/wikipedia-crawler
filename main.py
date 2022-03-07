@@ -4,6 +4,7 @@ import os
 import sys
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 # from testdata import data
 
@@ -22,7 +23,8 @@ article_of_the_day_id = 'artikel'
 
 
 # Create the driver
-driver = webdriver.Firefox()
+driver = webdriver.Remote('http://localhost:4444/wd/hub', desired_capabilities=DesiredCapabilities.CHROME)
+#driver = webdriver.Firefox(PATH);
 
 # Open the Wikipedia-Mainpage
 driver.get(wikipedia_homepage)
